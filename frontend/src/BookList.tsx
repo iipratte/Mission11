@@ -9,15 +9,18 @@ function BookList() {
   const [totalItems, setTotalItems] = useState<number>(0);
   const [totalPages, setTotalPages] = useState<number>(0);
 
+  // 1. New state for sorting
+  const [sortOrder, setSortOrder] = useState<string>('asc');
+
   useEffect(() => {
     const fetchBook = async () => {
       try {
+        // 2. Include sortOrder in the query string
         const response = await fetch(
-          `https://localhost:5000/api/Bookstore/GetBookstore?pageSize=${pageSize}&pageNum=${pageNum}`
+          `https://localhost:5000/api/Bookstore/GetBookstore?pageSize=${pageSize}&pageNum=${pageNum}&sortOrder=${sortOrder}`
         );
         const data = await response.json();
 
-        // Match the casing from your C# Controller (Books and TotalBooks)
         setBooks(data.books || []);
         const total = data.totalBooks || 0;
         setTotalItems(total);
@@ -28,20 +31,34 @@ function BookList() {
     };
 
     fetchBook();
-  }, [pageNum, pageSize]);
+  }, [pageNum, pageSize, sortOrder]); // 3. Re-run when sortOrder changes
 
   return (
     <div className="container mt-5">
       <div className="card shadow-lg mb-5">
-        {/* Header Section */}
         <div className="card-header bg-dark text-white p-3 d-flex justify-content-between align-items-center">
           <h2 className="mb-0 h4">Bookstore Inventory</h2>
-          <span className="badge bg-primary px-3 py-2">
-            Total Results: {totalItems}
-          </span>
+
+          {/* 4. Added Sort Dropdown in the Header */}
+          <div className="d-flex align-items-center">
+            <label className="me-2 small mb-0">Sort Title:</label>
+            <select
+              className="form-select form-select-sm w-auto me-3"
+              value={sortOrder}
+              onChange={(e) => {
+                setSortOrder(e.target.value);
+                setPageNum(1); // Reset to page 1 when sorting changes
+              }}
+            >
+              <option value="asc">A-Z</option>
+              <option value="des">Z-A</option>
+            </select>
+            <span className="badge bg-primary px-3 py-2">
+              Total Results: {totalItems}
+            </span>
+          </div>
         </div>
 
-        {/* Table Section */}
         <div className="card-body p-0">
           <div className="table-responsive">
             <table className="table table-hover table-striped mb-0 align-middle">
@@ -91,10 +108,8 @@ function BookList() {
           </div>
         </div>
 
-        {/* Footer with Controls */}
         <div className="card-footer bg-light py-3">
           <div className="row align-items-center">
-            {/* Pagination Links */}
             <div className="col-12 col-md-8 d-flex justify-content-center justify-content-md-start mb-3 mb-md-0">
               <nav aria-label="Page navigation">
                 <ul className="pagination mb-0">
@@ -138,7 +153,6 @@ function BookList() {
               </nav>
             </div>
 
-            {/* Results Per Page Dropdown */}
             <div className="col-12 col-md-4 d-flex justify-content-center justify-content-md-end align-items-center">
               <label className="me-2 text-muted small mb-0">
                 Items per page:
@@ -148,7 +162,7 @@ function BookList() {
                 value={pageSize}
                 onChange={(e) => {
                   setPageSize(Number(e.target.value));
-                  setPageNum(1); // Reset to page 1 to avoid index errors
+                  setPageNum(1);
                 }}
               >
                 <option value="5">5</option>
