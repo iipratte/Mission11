@@ -1,6 +1,5 @@
 import './App.css';
 import BookList from './BookList';
-import { type book } from './types/book';
 
 function App() {
   return (
