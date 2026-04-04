@@ -16,7 +16,7 @@ builder.Services.AddCors(options =>
     options.AddPolicy("BookstorePolicy", policy =>
     {
         policy
-            .WithOrigins("http://localhost:3000")
+            .WithOrigins("https://purple-bay-0220a970f.4.azurestaticapps.net")
             .AllowAnyMethod()
             .AllowAnyHeader();
     });
