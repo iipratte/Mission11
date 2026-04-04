@@ -16,7 +16,7 @@ builder.Services.AddCors(options =>
     options.AddPolicy("BookstorePolicy", policy =>
     {
         policy
-            .WithAnyOrigin()
+            .AllowAnyOrigin()
             .AllowAnyMethod()
             .AllowAnyHeader();
     });
