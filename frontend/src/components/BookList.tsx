@@ -28,9 +28,9 @@ function BookList({ selectedCategories }: { selectedCategories: string[] }) {
           sortOrder
         );
         setBooks(data.books ?? []);
-        const totalBooks = data.totalNumBooks ?? 0;
-        setTotalItems(totalBooks);
-        setTotalPages(Math.ceil(totalBooks / pageSize));
+        const totalNumBooks = data.totalNumBooks ?? 0;
+        setTotalItems(totalNumBooks);
+        setTotalPages(Math.ceil(totalNumBooks / pageSize));
       } catch (err) {
         setError((err as Error).message);
       } finally {

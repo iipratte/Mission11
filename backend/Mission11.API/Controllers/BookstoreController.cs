@@ -38,7 +38,7 @@ namespace Mission11.API.Controllers
                 query = query.OrderBy(b => b.Title);
             }
 
-            var totalNumberBooks = query.Count();
+            var totalNumBooks = query.Count();
 
             var books = query
                 .Skip((pageNum - 1) * pageSize)
@@ -48,7 +48,7 @@ namespace Mission11.API.Controllers
             return Ok(new
             {
                 Books = books,
-                TotalNumBooks = totalNumberBooks
+                TotalNumBooks = totalNumBooks
             });
         }
 
