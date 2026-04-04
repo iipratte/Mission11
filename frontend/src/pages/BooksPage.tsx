@@ -2,6 +2,7 @@ import { useState } from 'react';
 import BookList from '../components/BookList';
 import CategoryFilter from '../components/CategoryFilter';
 import WelcomeBand from '../components/WelcomeBand';
+import { Link } from 'react-router-dom';
 
 function BooksPage() {
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
@@ -20,6 +21,11 @@ function BooksPage() {
       </nav>
       <div className="row">
         <WelcomeBand />
+      </div>
+      <div className="d-flex justify-content-end my-3">
+        <Link to="/adminbooks" className="btn btn-outline-dark btn-sm">
+          Admin Books
+        </Link>
       </div>
       <div className="row g-3">
         <div className="col-12 col-lg-3">
