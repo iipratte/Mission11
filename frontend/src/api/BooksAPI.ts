@@ -1,6 +1,7 @@
 import type { book } from '../types/book';
 
-const BASE_URL = 'https://localhost:5000/api/Bookstore';
+const BASE_URL =
+  'https://bookstore-project-backend-pratte-dtf6g2c2a2dza5bu.francecentral-01.azurewebsites.net/api/Bookstore';
 
 interface FetchBooksResponse {
   books: book[];
