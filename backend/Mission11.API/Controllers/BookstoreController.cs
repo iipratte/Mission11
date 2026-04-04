@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Mission11.API.Data;
 
@@ -15,35 +15,40 @@ namespace Mission11.API.Controllers
             _bookstoreContext = temp;
         }
 
-        [HttpGet("GetBookstore")]
-        public IActionResult GetBooks(int pageSize = 5, int pageNum = 1, string sortOrder = "asc")
+        [HttpGet("AllBooks")]
+        public IActionResult GetBooks(int pageSize, int pageNum, string sortOrder = "asc", [FromQuery] List<string>? bookCategories = null)
         {
-            // 1. Start with the IQueryable
             var query = _bookstoreContext.Books.AsQueryable();
 
-            // 2. Apply Sorting
-            if (sortOrder.ToLower() == "des")
+            if (bookCategories != null && bookCategories.Any())
             {
-                query = query.OrderByDescending(b => b.Title);
-            }
-            else
-            {
-                query = query.OrderBy(b => b.Title);
+                query = query.Where(p => bookCategories.Contains(p.Category));
             }
 
-            // 3. Apply Pagination
-            var bookList = query
-                .Skip((pageNum - 1) * pageSize)
-                .Take(pageSize)
-                .ToList();
+            query = sortOrder?.ToLower() == "desc"
+                ? query.OrderByDescending(b => b.Title)
+                : query.OrderBy(b => b.Title);
 
-            var totalNumberBooks = _bookstoreContext.Books.Count();
+            var totalNumberBooks = query.Count();
 
-            return Ok(new
+            var something = query.Skip((pageNum - 1) * pageSize).Take(pageSize).ToList();
+
+
+            var someObject = (new
             {
-                Books = bookList,
+                Books = something,
                 TotalBooks = totalNumberBooks
             });
+
+            return Ok(someObject);
+        }
+
+        [HttpGet("GetBookCategories")]
+        public IActionResult GetBookCategories()
+        {
+            var bookCategories = _bookstoreContext.Books.Select(x => x.Category).Distinct().ToList();
+
+            return Ok(bookCategories);
         }
 
 
